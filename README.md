@@ -1,66 +1,214 @@
-# Customer Support Ticket Tracker MVP
+# Customer Support Ticket Tracker (MVP)
 
-A simple, full-stack application to track customer support tickets. This MVP demonstrates a 3-tier architecture using React (Frontend), Spring Boot (Backend), and in-memory data storage.
+## Overview
 
-## Architecture
+This project is a minimal full-stack **Customer Support Ticket Tracker** built as part of a FullStack engineering case study.
 
-- **Frontend**: React + Vite + Tailwind CSS
-- **Backend**: Spring Boot (Java 17) + REST API
-- **Data Layer**: In-Memory Storage (ConcurrentHashMap)
+The objective of this MVP is to provide a simple internal tool for support teams to:
 
-## Prerequisites
+- Create customer support tickets
+- View all tickets in one place
+- Update ticket status as work progresses
 
-- Node.js (v18+)
-- Java JDK 17+
-- Maven (v3.8+)
+The focus of this implementation is on **clean architecture, maintainability, and practical engineering decisions** rather than feature completeness or heavy UI polish.
 
-## Setup & Run Instructions
+---
 
-### 1. Run the Backend (Spring Boot)
+## Tech Stack
 
-Open a terminal in the root directory:
+### Frontend
 
-```bash
+- React (Vite)
+- Tailwind CSS
+- Axios
+- Responsive UI with reusable components
+
+### Backend
+
+- Java 25
+- Spring Boot
+- REST APIs
+- In-memory data storage (ConcurrentHashMap)
+- Maven
+
+---
+
+## Architecture & Design Approach
+
+The project follows a clean layered architecture to ensure maintainability and scalability.
+
+### Backend Architecture
+
+- **Controller Layer** → Handles HTTP requests and responses
+- **Service Layer** → Contains business logic and validations
+- **Repository Layer** → Handles in-memory data storage
+- **DTO Layer** → Separates request/response from internal models
+- **Global Exception Handling** → Centralized error handling
+
+This layered design ensures separation of concerns and makes it easy to scale the application in future.
+
+### Frontend Architecture
+
+- Component-based modular structure
+- Reusable UI components
+- Centralized API service layer
+- Clean state management using React hooks
+- Responsive layout using Tailwind CSS
+
+---
+
+## Core Features Implemented
+
+### 1. Create Support Ticket
+
+Users can create a new support ticket with:
+
+- Customer Name
+- Customer Email
+- Subject
+- Description
+- Priority (Low / Medium / High)
+
+System automatically:
+
+- Generates a unique ticket ID
+- Captures creation timestamp
+- Sets default status to **OPEN**
+
+---
+
+### 2. View All Tickets
+
+Displays all tickets in a clean and responsive list/table view showing:
+
+- Ticket ID
+- Subject
+- Priority
+- Status
+- Creation Date
+
+---
+
+### 3. Update Ticket Status
+
+Tickets can move through the following states:
+
+```
+OPEN → IN_PROGRESS → RESOLVED
+```
+
+Status transitions are validated in backend and reflected instantly in UI.
+
+---
+
+## Data Storage Decision
+
+This MVP uses **in-memory storage** instead of a database.
+
+**Reason:**
+Since the exercise is scoped to a 2–3 hour MVP, using an in-memory data layer allows focus on:
+
+- API design
+- Architecture
+- Functionality
+- Code quality
+
+In a production environment, this can be easily replaced with:
+
+- PostgreSQL
+- MySQL
+- MongoDB
+
+without major structural changes.
+
+---
+
+## Running the Project Locally
+
+### Backend (Spring Boot - Java 25)
+
+Navigate to backend folder:
+
+```
 cd backend
 mvn spring-boot:run
 ```
 
-The backend server will start on `http://localhost:8080`.
+Backend runs on:
 
-### 2. Run the Frontend (React)
+```
+http://localhost:8080
+```
 
-Open a **second** terminal in the root directory:
+---
 
-```bash
-cd front-end
+### Frontend (React + Vite)
+
+Navigate to frontend folder:
+
+```
+cd frontend
 npm install
 npm run dev
 ```
 
-The frontend application will be available at `http://localhost:5173`.
+Frontend runs on:
+
+```
+http://localhost:5173
+```
+
+---
 
 ## API Endpoints
 
-| Method | Endpoint            | Description          | Payload Example                                                                                                                   |
-| ------ | ------------------- | -------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| POST   | `/api/tickets`      | Create a new ticket  | `{"customerName": "John", "customerEmail": "john@example.com", "subject": "Help", "description": "Issue...", "priority": "HIGH"}` |
-| GET    | `/api/tickets`      | Get all tickets      | N/A                                                                                                                               |
-| GET    | `/api/tickets/{id}` | Get ticket by ID     | N/A                                                                                                                               |
-| PATCH  | `/api/tickets/{id}` | Update ticket status | `{"status": "IN_PROGRESS"}`                                                                                                       |
+### Create Ticket
 
-## Design Decisions & Tradeoffs
+```
+POST /api/tickets
+```
 
-- **In-Memory Storage**: Chose `ConcurrentHashMap` for speed and simplicity as per MVP requirements. **Tradeoff**: All data is lost when the application restarts.
-- **REST Protocol**: Standard RESTful design for clear separation of concerns.
-- **No Authentication**: Omitted to fit within the 2-3 hour timeframe.
-- **Validation**: Basic validation added (e.g., required fields, email format).
-- **Lombok Removal**: Removed Lombok to ensure maximum compatibility and reduce build complexity during improved stability.
+### Get All Tickets
 
-## AI Usage
+```
+GET /api/tickets
+```
 
-Used AI tools (GitHub Copilot / Coding Assistant) for:
+### Update Ticket Status
 
-- Generating boilerplate code (Spring Boot Controller/Service structure).
-- Creating basic React components.
-- Debugging compilation errors (Lombok configuration issues).
-- **Modification**: Manually stepped in to remove Lombok when it caused persistent build failures, opting for stable manual code over tool-dependent convenience.
+```
+PATCH /api/tickets/{id}
+```
+
+---
+
+## Trade-offs & Engineering Decisions
+
+Given the MVP scope and time constraints (2–3 hours):
+
+- Used in-memory storage instead of database
+- Focused only on core ticket workflow
+- Avoided authentication and advanced features
+- Kept UI simple but clean and responsive
+- Prioritized clean architecture and readability
+
+---
+
+## AI & Productivity Tools Usage
+
+Tools used:
+
+- ChatGPT / AI assistant for architectural planning and structuring
+- GitHub Copilot / AI tools for accelerating boilerplate generation
+
+Example:
+Some generated suggestions introduced unnecessary complexity, which were simplified to maintain MVP scope and keep the architecture clean and practical.
+
+All final design decisions and code structure were reviewed and adjusted manually.
+
+---
+
+## Author
+
+**Mehakjot Singh**
+Full Stack Developer (React + Java/Spring Boot)
