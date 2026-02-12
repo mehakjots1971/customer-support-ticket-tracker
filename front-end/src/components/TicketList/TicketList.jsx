@@ -2,7 +2,7 @@ import React from 'react';
 import TicketItem from '../TicketItem/TicketItem';
 import PropTypes from 'prop-types';
 
-const TicketList = ({ tickets, loading, onStatusUpdate }) => {
+const TicketList = ({ tickets, loading, onStatusUpdate, onDelete }) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-10">
@@ -25,7 +25,8 @@ const TicketList = ({ tickets, loading, onStatusUpdate }) => {
         <TicketItem 
           key={ticket.id} 
           ticket={ticket} 
-          onStatusUpdate={onStatusUpdate} 
+          onStatusUpdate={onStatusUpdate}
+          onDelete={onDelete} 
         />
       ))}
     </div>
@@ -35,7 +36,8 @@ const TicketList = ({ tickets, loading, onStatusUpdate }) => {
 TicketList.propTypes = {
   tickets: PropTypes.array.isRequired,
   loading: PropTypes.bool.isRequired,
-  onStatusUpdate: PropTypes.func.isRequired
+  onStatusUpdate: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired
 };
 
 export default TicketList;

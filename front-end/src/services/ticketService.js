@@ -7,8 +7,11 @@ const createTicket = async (ticketData) => {
   return response.data;
 };
 
-const getTickets = async () => {
-  const response = await axios.get(API_URL);
+const getTickets = async (status, search) => {
+  const params = {};
+  if (status) params.status = status;
+  if (search) params.search = search;
+  const response = await axios.get(API_URL, { params });
   return response.data;
 };
 
@@ -17,8 +20,14 @@ const updateTicketStatus = async (id, status) => {
   return response.data;
 };
 
+const deleteTicket = async (id) => {
+  const response = await axios.delete(`${API_URL}/${id}`);
+  return response.data;
+};
+
 export default {
   createTicket,
   getTickets,
-  updateTicketStatus
+  updateTicketStatus,
+  deleteTicket
 };

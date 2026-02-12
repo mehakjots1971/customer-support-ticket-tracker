@@ -37,4 +37,11 @@ public class InMemoryTicketRepository implements TicketRepository {
     public List<Ticket> findAll() {
         return new ArrayList<>(ticketStore.values());
     }
+
+    @Override
+    public void delete(Long id) {
+        ticketStore.remove(id);
+    }
+
 }
+

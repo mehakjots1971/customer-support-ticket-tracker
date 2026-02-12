@@ -10,4 +10,6 @@ public interface TicketRepository {
     Optional<Ticket> findById(Long id);
 
     List<Ticket> findAll();
+
+    void delete(Long id);
 }

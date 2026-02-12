@@ -38,11 +38,28 @@ public class TicketService {
         return mapToResponse(savedTicket);
     }
 
-    public List<TicketResponse> getAllTickets() {
-        return ticketRepository.findAll().stream()
+    public List<TicketResponse> getAllTickets(Status status, String search) {
+
+        List<Ticket> tickets = ticketRepository.findAll();
+
+        if (status != null) {
+            tickets = tickets.stream()
+                    .filter(t -> t.getStatus() == status)
+                    .collect(Collectors.toList());
+        }
+
+        if (search != null && !search.isEmpty()) {
+            tickets = tickets.stream()
+                    .filter(t -> t.getSubject().toLowerCase()
+                            .contains(search.toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+
+        return tickets.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
+
 
     public TicketResponse getTicketById(Long id) {
         Ticket ticket = ticketRepository.findById(id)
@@ -75,6 +92,13 @@ public class TicketService {
         // Add more specific transition rules if needed
         // For example: preventing moving back from RESOLVED to OPEN without specific
         // logic
+    }
+
+    public void deleteTicket(Long id){
+        Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Ticket not found"));
+
+        ticketRepository.delete(id);
     }
 
     private TicketResponse mapToResponse(Ticket ticket) {

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -30,8 +31,10 @@ public class TicketController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TicketResponse>> getAllTickets() {
-        return ResponseEntity.ok(ticketService.getAllTickets());
+    public ResponseEntity<List<TicketResponse>> getAllTickets(
+            @RequestParam(required = false) Status status,
+            @RequestParam(required = false) String search) {
+        return ResponseEntity.ok(ticketService.getAllTickets(status, search));
     }
 
     @GetMapping("/{id}")
@@ -46,4 +49,11 @@ public class TicketController {
         TicketResponse updatedTicket = ticketService.updateTicket(id, updates);
         return ResponseEntity.ok(updatedTicket);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteTicket(@PathVariable Long id) {
+        ticketService.deleteTicket(id);
+        return ResponseEntity.ok("Ticket Deleted Successfully");
+    }
+
 }
