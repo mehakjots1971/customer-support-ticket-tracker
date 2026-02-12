@@ -36,7 +36,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    // Debounce search
+    // Debounce search for better performance
     const timer = setTimeout(() => {
       fetchTickets();
     }, 500);
