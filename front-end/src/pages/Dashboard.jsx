@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import TicketForm from '../components/TicketForm/TicketForm';
 import TicketList from '../components/TicketList/TicketList';
 import ticketService from '../services/ticketService';
@@ -6,12 +6,14 @@ import ticketService from '../services/ticketService';
 const Dashboard = () => {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [filterStatus, setFilterStatus] = useState('');
 
-  const fetchTickets = async () => {
+  const fetchTickets = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await ticketService.getTickets();
-      // Sort by open/in_progress first, then new
+      const data = await ticketService.getTickets(filterStatus, search);
+      // Sort by new first
       const sorted = data.sort((a, b) => b.id - a.id); 
       setTickets(sorted);
     } catch (error) {
@@ -19,7 +21,7 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filterStatus, search]);
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this ticket?")) {
@@ -34,8 +36,12 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
+    // Debounce search
+    const timer = setTimeout(() => {
       fetchTickets();
-  }, []);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [fetchTickets]);
 
   return (
     <div className="min-h-screen bg-slate-50 relative overflow-hidden">
@@ -68,6 +74,28 @@ const Dashboard = () => {
                   Recent Tickets
                   <span className="ml-3 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">{tickets.length}</span>
                 </h2>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                <input 
+                  type="text" 
+                  placeholder="Search tickets..." 
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64"
+                />
+                
+                <select
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value)}
+                  className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white cursor-pointer"
+                >
+                  <option value="">All Status</option>
+                  <option value="OPEN">Open</option>
+                  <option value="IN_PROGRESS">In Progress</option>
+                  <option value="RESOLVED">Resolved</option>
+                </select>
+
                 <button 
                   onClick={fetchTickets}
                   className="px-4 py-2 text-sm font-semibold text-blue-700 bg-white border border-blue-100 rounded-lg shadow-sm hover:bg-blue-50 transition-all flex items-center justify-center whitespace-nowrap"
